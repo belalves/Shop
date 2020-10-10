@@ -4,13 +4,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+
 using Shop.Data;
 
-namespace Shop
+namespace Backoffice
 {
     public class Startup
     {
@@ -20,27 +20,20 @@ namespace Shop
         }
 
         public IConfiguration Configuration { get; }
-       
+
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            //services.AddDbContext<DataContext>(opt => opt.UseMemoryCache);
-            services.AddScoped<DataContext, DataContext>();
-        }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+            //services.AddDbContext<DataContext>(options => options.UseSqlServer(Configuration.GetConnectionString("RazorPagesMovieContext")));
+            services.AddDbContext<DataContext>(options => options.UseInMemoryDatabase("Database"));
+    }
+
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseAuthorization();
+                app.UseDeveloperExceptionPage();                       
 
             app.UseEndpoints(endpoints =>
             {
